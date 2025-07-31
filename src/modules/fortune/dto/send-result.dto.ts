@@ -8,9 +8,8 @@ export class SendResultDto {
     enum: ['email', 'sms'],
     description: '전송 방식: 이메일 또는 문자',
   })
-  @IsIn(['email', 'sms'])
-  type: 'email' | 'sms';
-
+  @IsIn(['saju', 'tarot'])
+  resultType: 'saju' | 'tarot';
   @ApiProperty({
     example: 'user@example.com',
     description: '전송 대상 이메일 주소 또는 휴대폰 번호',

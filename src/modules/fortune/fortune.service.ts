@@ -1,3 +1,5 @@
+import * as nodemailer from 'nodemailer';
+
 import { Injectable } from '@nestjs/common';
 import { SajuRequestDto } from './dto/saju.dto';
 import { SendResultDto } from './dto/send-result.dto';
@@ -44,13 +46,45 @@ export class FortuneService {
     };
   }
 
-  async sendResult({ type, target, summary, imageBase64 }: SendResultDto) {
-    if (type === 'email') {
-      // 이메일 전송 로직
-    } else if (type === 'sms') {
-      // SMS 전송 로직
-    }
+  async sendResult({
+    resultType,
+    target,
+    summary,
+    imageBase64,
+  }: SendResultDto) {
+    const title =
+      resultType === 'saju' ? '🔮 당신의 사주 결과' : '🃏 당신의 타로 결과';
 
-    return { success: true };
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const base64Data = imageBase64.split(',')[1];
+
+    const mailOptions = {
+      from: `"사주타로관상" <${process.env.EMAIL_USER}>`,
+      to: target,
+      subject: `${title}가 도착했습니다!`,
+      text: summary,
+      attachments: [
+        {
+          filename: `${resultType}_result.png`,
+          content: Buffer.from(base64Data, 'base64'),
+          encoding: 'base64',
+        },
+      ],
+    };
+
+    try {
+      await transporter.sendMail(mailOptions);
+      return { success: true };
+    } catch (error) {
+      console.error('이메일 전송 실패:', error);
+      return { success: false };
+    }
   }
 }
