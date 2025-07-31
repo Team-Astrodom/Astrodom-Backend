@@ -15,7 +15,6 @@ import {
 } from '@nestjs/swagger';
 import { FortuneService } from './fortune.service';
 import { SajuRequestDto } from './dto/saju.dto';
-import { TarotRequestDto } from './dto/tarot.dto';
 import { SendResultDto } from './dto/send-result.dto';
 import { FaceRequestDto } from './dto/face.dto';
 
