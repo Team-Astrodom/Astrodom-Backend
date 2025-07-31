@@ -81,8 +81,31 @@ export class FortuneController {
   }
 
   @Post('/send-result')
-  @ApiOperation({ summary: '결과 전송 API (이메일 또는 문자)' })
-  @ApiBody({ type: SendResultDto })
+  @ApiOperation({ summary: '결과 전송 API (이메일 전용)' })
+  @ApiBody({
+    type: SendResultDto,
+    description: '사주 또는 타로 결과를 이메일로 전송합니다.',
+    examples: {
+      sajuExample: {
+        summary: '사주 결과 이메일 전송',
+        value: {
+          resultType: 'saju',
+          target: 'user@example.com',
+          summary: '당신의 사주 결과입니다.',
+          imageBase64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...',
+        },
+      },
+      tarotExample: {
+        summary: '타로 결과 이메일 전송',
+        value: {
+          resultType: 'tarot',
+          target: 'user@example.com',
+          summary: "'The Lovers' 카드가 선택되었습니다.",
+          imageBase64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA...',
+        },
+      },
+    },
+  })
   @ApiResponse({
     status: 200,
     description: '성공 여부 반환',
